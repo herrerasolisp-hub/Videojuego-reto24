@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videojuego</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Batalla Épica: Guerrero vs. Mago</h1>
+    </header>
+
+    <main>
+        <section class="game-container">
+            <!-- Panel de jugadores -->
+             <div class="players-arena">
+                <!-- Jugador 1: Guerrero -->
+                 <article class="player-card warrior-card">
+                    <h2 id="name-player1">Guerrero</h2>
+                    <div class="health-container">
+                        <label for="health-1">Salud:</label>
+                        <progress id="health-1" value="100" max="100"></progress>
+                        <span id="health-text-1">100 / 100</span>
+                    </div>
+                 </article>
+
+                 <!-- Jugador 2: Mago -->
+                  <article class="player-card mage-card">
+                    <h2 id="name-player2">Mago</h2>
+                    <div class="health-container">
+                        <label for="health-2">Salud:</label>
+                        <progress id="health-2" value="100" max="100"></progress>
+                        <span id="health-text-2">100 / 100</span>
+                    </div>
+                  </article>
+             </div>
+
+             <!-- Panel de Control / Botones -->
+              <section class="controls-section">
+                <div id="turn-indicator" class="turn-indicator">Esperando inicio...</div>
+                <div class="button-group">
+                    <button id="btn-attack" class="btn action-btn" disabled>Atacar</button>
+                    <button id="btn-heal" class="btn action-btn" disabled>Curar</button>
+                    <button id="btn-restart" class="btn restart-btn">Reiniciar Juego</button>
+                </div>
+              </section>
+
+              <!-- Área de Registro (Log) --> 
+               <section class="log-section">
+                <h3>Registro de Acciones</h3>
+                <div id="game-log" class="game-log"></div>
+               </section>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
