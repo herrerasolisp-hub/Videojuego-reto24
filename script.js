@@ -1,4 +1,3 @@
-console.log("El archivo script.js está cargando correctamente.");
 
 class Jugador {
     constructor(nombre, salud, color) {
@@ -9,8 +8,8 @@ class Jugador {
 
     atacar(objetivo) {
         let dano = Math.floor(Math.random() * 11) + 8;
-        objetivo.salud -=dano;
-        if (objetivo.salud <0) {
+        objetivo.salud -= dano;
+        if (objetivo.salud < 0) {
             objetivo.salud = 0;
         }
         return dano;
@@ -26,12 +25,17 @@ class Jugador {
     }
 }
 
+
 class Juego {
     constructor() {
         this.jugador1 = new Jugador("Guerrero", 100, "#ef4444");
         this.jugador2 = new Jugador("Mago", 100, "#3b82f6");
         this.turnoActual = null;
         this.juegoActivo = false;
+
+        this.inicializarReferenciasDOM();
+        this.vincularEventos();
+        this.iniciarJuego();
     }
 
     inicializarReferenciasDOM() {
@@ -41,10 +45,16 @@ class Juego {
         this.elemHealthText2 = document.getElementById("health-text-2");
         this.elemTurnIndicator = document.getElementById("turn-indicator");
         this.elemLog = document.getElementById("game-log");
-
+        
         this.btnAttack = document.getElementById("btn-attack");
         this.btnHeal = document.getElementById("btn-heal");
         this.btnRestart = document.getElementById("btn-restart");
+    }
+
+    vincularEventos() {
+        this.btnAttack.addEventListener("click", () => this.manejarAtaque());
+        this.btnHeal.addEventListener("click", () => this.manejarCuracion());
+        this.btnRestart.addEventListener("click", () => this.iniciarJuego());
     }
 
     iniciarJuego() {
@@ -53,7 +63,8 @@ class Juego {
         this.juegoActivo = true;
         this.elemLog.innerHTML = "";
 
-        this.turnoActual = Math.floor(Math.random() *2) + 1;
+        // Asignar turno aleatorio (1 o 2)
+        this.turnoActual = Math.floor(Math.random() * 2) + 1;
 
         this.registrarEnLog("¡El juego ha comenzado!");
         let nombreTurnoInicial = this.turnoActual === 1 ? this.jugador1.nombre : this.jugador2.nombre;
@@ -79,20 +90,16 @@ class Juego {
         this.elemLog.scrollTop = this.elemLog.scrollHeight;
     }
 
-    reiniciarJuego(){
-        this.iniciarJuego();
-    }
-
     manejarAtaque() {
         if (!this.juegoActivo) return;
 
         let atacante = this.turnoActual === 1 ? this.jugador1 : this.jugador2;
         let defensor = this.turnoActual === 1 ? this.jugador2 : this.jugador1;
-        
+
         let danoAplicado = atacante.atacar(defensor);
         this.registrarEnLog(`${atacante.nombre} atacó a ${defensor.nombre} causando ${danoAplicado} puntos de daño.`);
 
-        this.verificarFinDeJuego(defensor);
+        this.verificarFinDeJuego();
         if (this.juegoActivo) {
             this.cambiarDeTurno();
         }
@@ -102,9 +109,8 @@ class Juego {
         if (!this.juegoActivo) return;
 
         let jugadorActual = this.turnoActual === 1 ? this.jugador1 : this.jugador2;
-        let saludAnterior = jugadorActual.salud;
         let cantidadCurada = jugadorActual.curar();
-
+        
         this.registrarEnLog(`${jugadorActual.nombre} se curó recuperando ${cantidadCurada} puntos de salud.`);
 
         this.verificarFinDeJuego();
@@ -113,7 +119,7 @@ class Juego {
         }
     }
 
-    verificarFinDeJuego(oponente = null) {
+    verificarFinDeJuego() {
         if (this.jugador1.salud <= 0 || this.jugador2.salud <= 0) {
             this.juegoActivo = false;
             let ganador = this.jugador1.salud > 0 ? this.jugador1.nombre : this.jugador2.nombre;
@@ -131,7 +137,7 @@ class Juego {
 
         if (this.juegoActivo) {
             let nombreTurno = this.turnoActual === 1 ? this.jugador1.nombre : this.jugador2.nombre;
-            this.elemTurnIndicator.textContent = `Turno de. ${nombreTurno}`;
+            this.elemTurnIndicator.textContent = `Turno de: ${nombreTurno}`;
             this.btnAttack.disabled = false;
             this.btnHeal.disabled = false;
         } else {
@@ -142,6 +148,7 @@ class Juego {
     }
 }
 
-window.addEventListener("load", () => {
+
+window.addEventListener("DOMContentLoaded", () => {
     new Juego();
 });
